@@ -1,17 +1,13 @@
-package com.github.qoiu.calculator.presentation
+package com.github.qoiu.calculator.presentation.keyboard
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.qoiu.calculator.databinding.KeyboardItemBinding
+import com.github.qoiu.calculator.presentation.UiKey
 
-class KeyboardAdapter(private var list: List<UiKey> = emptyList()) : RecyclerView.Adapter<KeyboardAdapter.KeyboardHolder>() {
-
-
-    fun updateList(list: List<UiKey>){
-        this.list = list
-        notifyDataSetChanged()
-    }
+class KeyboardAdapter(private val list: List<UiKey> = emptyList()) :
+    RecyclerView.Adapter<KeyboardAdapter.KeyboardHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = KeyboardHolder(
         KeyboardItemBinding.inflate(
@@ -27,11 +23,11 @@ class KeyboardAdapter(private var list: List<UiKey> = emptyList()) : RecyclerVie
 
     override fun getItemCount() = list.size
 
-    inner class KeyboardHolder(private  val view: KeyboardItemBinding) : RecyclerView.ViewHolder(view.root) {
-        fun bind(item: UiKey){
+    inner class KeyboardHolder(private val view: KeyboardItemBinding) :
+        RecyclerView.ViewHolder(view.root) {
+        fun bind(item: UiKey) {
             view.text.text = item.value
             view.text.setOnClickListener { item.action() }
         }
-
     }
 }
