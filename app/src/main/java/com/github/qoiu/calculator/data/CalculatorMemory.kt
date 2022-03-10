@@ -2,8 +2,9 @@ package com.github.qoiu.calculator.data
 
 import android.util.Log
 import com.github.qoiu.calculator.domain.model.Calculator
-import com.github.qoiu.calculator.domain.model.OperandEmpty
-import com.github.qoiu.calculator.domain.model.OperandLong
+import com.github.qoiu.calculator.domain.model.operands.Operand
+import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
+import com.github.qoiu.calculator.domain.model.operands.OperandLong
 import java.util.*
 
 interface CalculatorMemory {
@@ -15,7 +16,7 @@ interface CalculatorMemory {
         private val operations: Stack<Calculator> = Stack()
         override fun append(value: String) {
             Log.w("Memory", value)
-            if (lastValue is Calculator.Operand<*> && lastValue !is OperandEmpty) {
+            if (lastValue is Operand<*> && lastValue !is OperandEmpty) {
                 (lastValue as OperandLong).append(value)
             } else {
                 lastValue = OperandLong(value)

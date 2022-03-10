@@ -1,5 +1,6 @@
 package com.github.qoiu.calculator.domain.model
 
+import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
 import org.junit.Test
 
 class OperandEmptyTest{
@@ -8,13 +9,14 @@ class OperandEmptyTest{
         OperandEmpty().result()
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun plus(){
-        OperandEmpty().plus(OperandEmpty())
-    }
 
     @Test(expected = ClassCastException::class)
     fun compare_with_type(){
         OperandEmpty().compareTypeWith(OperandEmpty())
+    }
+
+    @Test(expected = java.lang.IllegalStateException::class)
+    fun value(){
+        OperandEmpty().value()
     }
 }

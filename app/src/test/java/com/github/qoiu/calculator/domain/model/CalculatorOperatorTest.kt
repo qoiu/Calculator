@@ -1,5 +1,7 @@
 package com.github.qoiu.calculator.domain.model
 
+import com.github.qoiu.calculator.domain.model.operands.OperandLong
+import com.github.qoiu.calculator.domain.model.operators.OperatorAdd
 import org.junit.Assert.*
 import org.junit.Test
 

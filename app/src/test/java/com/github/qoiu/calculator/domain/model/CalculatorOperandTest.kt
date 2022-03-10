@@ -1,5 +1,6 @@
 package com.github.qoiu.calculator.domain.model
 
+import com.github.qoiu.calculator.domain.model.operands.*
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -7,7 +8,7 @@ class CalculatorOperandTest {
 
     @Test
     fun operand_append() {
-        var actual: Calculator.Operand<*> = OperandEmpty()
+        var actual: Operand<*> = OperandEmpty()
         actual = actual.append("5")
         assertEquals(OperandLong("5"), actual.result())
         actual = actual.append("6")
@@ -20,13 +21,13 @@ class CalculatorOperandTest {
 
     @Test(expected = IllegalStateException::class)
     fun operand_long_upperBound() {
-        val actual: Calculator.Operand<*> = OperandLong("123456789")
+        val actual: Operand<*> = OperandLong("123456789")
         actual.append("2")
     }
 
     @Test
     fun operand_delete() {
-        var actual: Calculator.Operand<*> = OperandLong("235.82")
+        var actual: Operand<*> = OperandLong("235.82")
         actual = actual.delete()
         assertEquals(OperandDouble("235.8"), actual)
         actual = actual.delete()
@@ -67,5 +68,19 @@ class CalculatorOperandTest {
             OperandDecimal("123456789.123456789"),
             OperandDecimal("123456789.123456789").compareTypeWith(OperandDouble("233.5"))
         )
+    }
+
+    @Test
+    fun equals_hash() {
+        val o1 = OperandDecimal("23")
+        val o2 = OperandDecimal("23")
+        val o3 = OperandLong("23")
+        val o4 = OperandDecimal("25")
+        assertTrue(o1 == o1)
+        assertTrue(o1 == o2)
+        assertTrue(o2 == o1)
+        assertTrue(!o1.equals(o3))
+        assertTrue(o1 != o4)
+        assertEquals(o1.hashCode(), o2.hashCode())
     }
 }
