@@ -10,4 +10,10 @@ sealed class UiKey(val value: String) {
             actions.appendNumber(value)
         }
     }
+
+    class Operator(private val actions: KeyboardActions, key: String) : UiKey(key) {
+        override fun action() {
+            actions.appendOperator(value)
+        }
+    }
 }

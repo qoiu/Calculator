@@ -5,6 +5,10 @@ import com.github.qoiu.calculator.domain.UseCaseAppend
 
 class KeyboardViewModel(private val cases: UseCaseAppend) : ViewModel(), KeyboardActions {
     override fun appendNumber(value: String) {
-        cases.append(value)
+        cases.appendNumber(value)
+    }
+
+    override fun appendOperator(value: String) {
+        cases.appendOperator(value)
     }
 }

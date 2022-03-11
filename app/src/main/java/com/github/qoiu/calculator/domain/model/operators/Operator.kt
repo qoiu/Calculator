@@ -5,23 +5,26 @@ import com.github.qoiu.calculator.domain.model.operands.*
 
 
 abstract class Operator(
-    protected val operand: Operand<*>,
+    protected val operand: Calculator,
+    private val weight: Int = 0,
     protected var operand2: Operand<*> = OperandEmpty()
-) : Calculator, Operation.All {
+) : Calculator, Operation.OperationDecimal {
 
     override fun result(): Operand<*> =
-        when (val o1 = operand.compareTypeWith(operand2)) {
-            is OperandLong -> {
-                operation(o1.value(), operand2.toOperandLong().value())
-            }
-            is OperandDouble -> {
-                operation(o1.value(), operand2.toOperandDouble().value())
-            }
-            is OperandDecimal -> {
-                operation(o1.value(), operand2.toOperandDecimal().value())
-            }
-            else ->
-                throw IllegalStateException("empty value")
+        if (operand is Operator && weight >= operand.weight) {
+            val preResult = operation(
+                operand.operand2.result().toOperandDecimal().value(),
+                operand2.toOperandDecimal().value()
+            ).fixValue()
+            operand.operation(
+                operand.operand.result().toOperandDecimal().value(),
+                preResult.result().toOperandDecimal().value()
+            )
+        } else {
+            operation(
+                operand.result().toOperandDecimal().value(),
+                operand2.toOperandDecimal().value()
+            ).fixValue()
         }
 
     override fun append(symbol: String): Calculator {
@@ -30,11 +33,10 @@ abstract class Operator(
     }
 
     override fun delete(): Calculator {
-        return if (operand2 is OperandEmpty)
-            operand
-        else {
+        if (operand2 !is OperandEmpty) {
             this.operand2 = operand2.delete()
-            this
+            return this
         }
+        return operand.result()
     }
 }

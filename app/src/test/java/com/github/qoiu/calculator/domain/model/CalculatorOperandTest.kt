@@ -46,31 +46,6 @@ class CalculatorOperandTest {
 
 
     @Test
-    fun operand_compare() {
-        assertEquals(OperandDouble("23"), OperandLong("23").compareTypeWith(OperandDouble("233.5")))
-        assertEquals(
-            OperandDouble("233.5"),
-            OperandDouble("233.5").compareTypeWith(OperandDouble("2.5"))
-        )
-        assertEquals(
-            OperandDouble("233.5"),
-            OperandDouble("233.5").compareTypeWith(OperandLong("2.5"))
-        )
-        assertEquals(
-            OperandDouble("0.0"),
-            OperandDouble("0.0").compareTypeWith(OperandLong("2.5"))
-        )
-        assertEquals(
-            OperandDecimal("233.5"),
-            OperandDouble("233.5").compareTypeWith(OperandDecimal("123456789.123456789"))
-        )
-        assertEquals(
-            OperandDecimal("123456789.123456789"),
-            OperandDecimal("123456789.123456789").compareTypeWith(OperandDouble("233.5"))
-        )
-    }
-
-    @Test
     fun equals_hash() {
         val o1 = OperandDecimal("23")
         val o2 = OperandDecimal("23")

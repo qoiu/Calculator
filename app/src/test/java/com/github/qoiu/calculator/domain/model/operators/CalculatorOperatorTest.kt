@@ -1,7 +1,8 @@
-package com.github.qoiu.calculator.domain.model
+package com.github.qoiu.calculator.domain.model.operators
 
+import com.github.qoiu.calculator.domain.model.Calculator
+import com.github.qoiu.calculator.domain.model.operands.OperandDecimal
 import com.github.qoiu.calculator.domain.model.operands.OperandLong
-import com.github.qoiu.calculator.domain.model.operators.OperatorAdd
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -9,7 +10,7 @@ class CalculatorOperatorTest {
 
     @Test
     fun append() {
-        val actual = OperatorAdd(OperandLong("2"))
+        val actual = OperatorAdd(OperandDecimal("2"))
         actual.append("2")
         assertEquals(OperandLong("4"), actual.result())
         assertEquals("2+2", actual.toString())
@@ -17,7 +18,7 @@ class CalculatorOperatorTest {
 
     @Test
     fun delete() {
-        var actual: Calculator = OperatorAdd(OperandLong("2"))
+        var actual: Calculator = OperatorAdd(OperandDecimal("2"))
         actual = actual.append("2")
         actual = actual.append("3")
         actual = actual.append("4")
@@ -34,9 +35,18 @@ class CalculatorOperatorTest {
     }
 
     @Test
-    fun extra_test(){
-        var actual: Calculator = OperatorAdd(OperandLong("0.25"))
+    fun extra_test() {
+        var actual: Calculator = OperatorAdd(OperandDecimal("0.25"))
         actual = actual.append("0.75").result()
-        assertEquals(OperandLong("1"),actual)
+        assertEquals(OperandLong("1"), actual)
+    }
+
+    @Test
+    fun global_test() {
+        var actual: Calculator = OperatorAdd(OperandDecimal("8")).append("6")
+        actual = OperatorMultiply(actual).append("2")
+        assertEquals(20L, actual.result().value())
+        actual = OperatorSub(actual).append("3")
+        assertEquals(12L, actual.result().value())
     }
 }

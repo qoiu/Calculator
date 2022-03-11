@@ -1,5 +1,6 @@
 package com.github.qoiu.calculator.presentation.output
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -17,9 +18,13 @@ class OutputFragment : BaseFragment<OutputViewModel, FragmentOutputBinding>() {
 
     override fun init(binding: FragmentOutputBinding) {
         viewModel.subscribe(this) {
+            Log.w("Output", it.toString())
             when (it) {
-                is OutputResult.Success -> if (it.result.isNotEmpty()) binding.text.text =
-                    it.result[0].toString()
+                is OutputResult.Success -> binding.text.text =
+                    if (it.result.isNotEmpty())
+                        "${it.arguments}=${it.result}"
+                    else
+                        it.arguments
                 is OutputResult.Error -> Toast.makeText(
                     context,
                     it.e.message ?: "error",

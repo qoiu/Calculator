@@ -4,6 +4,6 @@ import java.lang.Exception
 
 sealed class OutputResult {
 
-    class Success(val result: List<Calculator>) : OutputResult()
-    class Error(val e: Exception) : OutputResult()
+    data class Success(val arguments: String, val result: String = "") : OutputResult()
+    data class Error(val e: Exception) : OutputResult()
 }

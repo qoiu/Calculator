@@ -9,7 +9,7 @@ sealed class Operand<T : Number>(
 ) : Calculator, OperandMethods {
     abstract fun value(): T
 
-    override fun result(): Operand<*> = this
+    override fun result(): Operand<*> = classCheck()
 
     override fun append(symbol: String): Operand<*> {
         this.value = "$value$symbol"
@@ -23,16 +23,14 @@ sealed class Operand<T : Number>(
         return classCheck()
     }
 
-    protected fun classCheck(): Operand<*> {
+    fun classCheck(): Operand<*> {
         if (value.isBlank())
             return OperandEmpty()
-        return if (value.contains('.')) {
-            if (value.length > 9) {
+        return if (value.length > 15) {
                 toOperandDecimal()
-            } else {
+            } else if (value.contains('.')) {
                 toOperandDouble()
-            }
-        } else {
+            } else {
             if (value.length > lengthMax)
                 throw IllegalStateException("You can use only $lengthMax symbols")
             toOperandLong()
@@ -46,19 +44,9 @@ sealed class Operand<T : Number>(
         return this
     }
 
-    override fun compareTypeWith(operand: Operand<*>): Operand<*> =
-        when (operand.weight.coerceAtLeast(this.weight)) {
-            1 -> toOperandLong()
-            2 -> toOperandDouble()
-            3 -> toOperandDecimal()
-            else -> {
-                throw java.lang.ClassCastException("Error in Operand type compare: Unknown class")
-            }
-        }
-
-    override fun toOperandLong() = OperandLong(value)
-    override fun toOperandDouble() = OperandDouble(value)
-    override fun toOperandDecimal() = OperandDecimal(value)
+    override fun toOperandLong()= if(this is OperandLong) this else OperandLong(value)
+    override fun toOperandDouble() = if(this is OperandDouble) this else OperandDouble(value)
+    override fun toOperandDecimal() = if(this is OperandDecimal) this else OperandDecimal(value)
 
     override fun toString(): String = value
 

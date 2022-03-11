@@ -10,11 +10,6 @@ class OperandEmptyTest{
     }
 
 
-    @Test(expected = ClassCastException::class)
-    fun compare_with_type(){
-        OperandEmpty().compareTypeWith(OperandEmpty())
-    }
-
     @Test(expected = java.lang.IllegalStateException::class)
     fun value(){
         OperandEmpty().value()
