@@ -4,74 +4,80 @@ import com.github.qoiu.calculator.domain.model.Calculator
 import com.github.qoiu.calculator.domain.model.operands.Operand
 import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
 import com.github.qoiu.calculator.domain.model.operands.OperandLong
-import com.github.qoiu.calculator.domain.model.operators.OperatorAdd
-import com.github.qoiu.calculator.domain.model.operators.OperatorDiv
-import com.github.qoiu.calculator.domain.model.operators.OperatorMultiply
-import com.github.qoiu.calculator.domain.model.operators.OperatorSub
+import com.github.qoiu.calculator.domain.model.operators.*
 import java.util.*
 
 interface CalculatorMemory {
     fun append(value: String)
     fun delete()
+    fun clear()
     fun add()
     fun sub()
     fun multiply()
     fun div()
     fun result(): String
     fun output(): String
+    fun pow()
 
     class Base : CalculatorMemory {
-        private var lastValue: Calculator = OperandEmpty()
+        private var currentValue: Calculator = OperandEmpty()
+        private var value: Calculator = OperandEmpty()
         private val operations: Stack<Calculator> = Stack()
+
         override fun append(value: String) {
-            if (lastValue is OperandEmpty) {
-                lastValue = OperandLong(value)
-                operations.add(lastValue)
+            if (currentValue is OperandEmpty) {
+                currentValue = OperandLong(value)
+                operations.add(currentValue)
             } else {
-                lastValue = lastValue.append(value)
+                currentValue = currentValue.append(value)
             }
             output()
         }
 
         override fun delete() {
-            lastValue = lastValue.delete()
+            currentValue = currentValue.delete()
+            output()
+        }
+
+        override fun clear() {
+            currentValue = OperandEmpty()
             output()
         }
 
         override fun add() {
-            if (lastValue is Operand<*>)
-                lastValue = OperatorAdd(lastValue.result().toOperandDecimal())
-            else
-                lastValue = OperatorAdd(lastValue)
-            output()
+            append(OperatorAdd())
         }
 
         override fun sub() {
-            if (lastValue is Operand<*>)
-                lastValue = OperatorSub(lastValue.result().toOperandDecimal())
-            else
-                lastValue = OperatorSub(lastValue)
-            output()
+            append(OperatorSub())
         }
 
         override fun multiply() {
-            if (lastValue is Operand<*>)
-                lastValue = OperatorMultiply(lastValue.result().toOperandDecimal())
-            else
-                lastValue = OperatorMultiply(lastValue)
-            output()
+            append(OperatorMultiply())
         }
 
         override fun div() {
-            if (lastValue is Operand<*>)
-                lastValue = OperatorDiv(lastValue.result().toOperandDecimal())
-            else
-                lastValue = OperatorDiv(lastValue)
+            append(OperatorDiv())
+        }
+
+        override fun pow() {
+            append(OperatorPow())
+        }
+
+        private fun append(operator: Operator) {
+            if (currentValue is OperandEmpty) return
+            if (currentValue is Operand<*>) {
+                currentValue = operator.init(currentValue.result().toOperandDecimal())
+            } else
+                currentValue = (currentValue as Operator).append(operator)
             output()
         }
 
-        override fun result(): String = lastValue.result().toString()
+        override fun result(): String {
+//            currentValue = currentValue.result()
+            return currentValue.result().toString()
+        }
 
-        override fun output(): String = lastValue.toString()
+        override fun output(): String = currentValue.toString()
     }
 }

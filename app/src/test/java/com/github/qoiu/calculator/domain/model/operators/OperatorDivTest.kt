@@ -23,7 +23,7 @@ class OperatorDivTest {
     @Test
     fun test_division() {
         testCases.forEach {
-            val o1 = OperatorDiv(OperandDecimal(it.o1)).append(it.o2).result()
+            val o1 = OperatorDiv(OperandDecimal(it.o1), OperandDecimal(it.o2)).result()
             println(it)
             println(o1)
             assertEquals(it.expected, o1)

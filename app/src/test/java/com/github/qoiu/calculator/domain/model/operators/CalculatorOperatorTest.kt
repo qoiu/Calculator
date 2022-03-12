@@ -18,7 +18,7 @@ class CalculatorOperatorTest {
 
     @Test
     fun delete() {
-        var actual: Calculator = OperatorAdd(OperandDecimal("2"))
+        var actual: Calculator = OperatorAdd(OperandDecimal("2").fixValue())
         actual = actual.append("2")
         actual = actual.append("3")
         actual = actual.append("4")
@@ -43,10 +43,16 @@ class CalculatorOperatorTest {
 
     @Test
     fun global_test() {
+        //8+6*2/3-5=7
         var actual: Calculator = OperatorAdd(OperandDecimal("8")).append("6")
-        actual = OperatorMultiply(actual).append("2")
-        assertEquals(20L, actual.result().value())
-        actual = OperatorSub(actual).append("3")
-        assertEquals(12L, actual.result().value())
+        actual = (actual as Operator).append(OperatorMultiply())
+        actual = actual.append("2")
+        actual = (actual as Operator).append(OperatorDiv())
+        actual = actual.append("3")
+        actual = (actual as Operator).append(OperatorSub())
+        actual = actual.append("5")
+        actual = actual.result()
+
+        assertEquals(7L, actual.value())
     }
 }

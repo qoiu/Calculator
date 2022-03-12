@@ -1,5 +1,6 @@
 package com.github.qoiu.calculator
 
+import com.github.qoiu.calculator.data.BufferMemory
 import com.github.qoiu.calculator.data.CalculatorMemory
 import com.github.qoiu.calculator.domain.CalculatorInteractor
 import com.github.qoiu.calculator.domain.UseCaseAppend
@@ -12,7 +13,7 @@ class Core {
 
     fun init() {
         calculatorMemory = CalculatorMemory.Base()
-        val interactor = CalculatorInteractor(calculatorMemory)
+        val interactor = CalculatorInteractor(calculatorMemory, BufferMemory.Base())
         useCaseAppend = interactor
         useCaseObserver = interactor
     }

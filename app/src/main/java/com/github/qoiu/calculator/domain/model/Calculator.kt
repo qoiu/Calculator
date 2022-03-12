@@ -6,4 +6,5 @@ interface Calculator {
     fun result(): Operand<*>
     fun append(symbol: String): Calculator
     fun delete(): Calculator
+    fun weight(): Int
 }

@@ -1,7 +1,7 @@
 package com.github.qoiu.calculator.domain.model.operands
 
 class OperandDouble(value: String) :
-    Operand<Double>(value, 2, 9) {
+    Operand<Double>(value, 9) {
 
     override fun fixValue(): Operand<*> =
         try {

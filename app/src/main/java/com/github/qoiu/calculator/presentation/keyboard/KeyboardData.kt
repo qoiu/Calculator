@@ -7,9 +7,13 @@ class KeyboardData(actions: KeyboardActions) {
     val defaultKeyboard = Keyboard(
         4,
         listOf(
+            UiKey.Operator(actions, "m+"),
+            UiKey.Operator(actions, "m-"),
+            UiKey.Operator(actions, "ms"),
+            UiKey.Operator(actions, "mr"),
             UiKey.Operator(actions, "+"),
-            UiKey.Operator(actions, "+"),
-            UiKey.Operator(actions, "+"),
+            UiKey.Operator(actions, "^"),
+            UiKey.Operator(actions, "C"),
             UiKey.Operator(actions, "Del"),
             UiKey.Number(actions, "7"),
             UiKey.Number(actions, "8"),

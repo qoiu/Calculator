@@ -13,10 +13,6 @@ class CalculatorOperandTest {
         assertEquals(OperandLong("5"), actual.result())
         actual = actual.append("6")
         assertEquals(OperandLong("56"), actual.result())
-        actual = actual.append(".")
-        assertEquals(OperandDouble("56."), actual.result())
-        actual = actual.append("0")
-        assertEquals(OperandDouble("56.0"), actual.result())
     }
 
     @Test(expected = IllegalStateException::class)
