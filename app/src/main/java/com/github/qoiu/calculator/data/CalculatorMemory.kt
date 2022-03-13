@@ -1,9 +1,7 @@
 package com.github.qoiu.calculator.data
 
 import com.github.qoiu.calculator.domain.model.Calculator
-import com.github.qoiu.calculator.domain.model.operands.Operand
-import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
-import com.github.qoiu.calculator.domain.model.operands.OperandLong
+import com.github.qoiu.calculator.domain.model.operands.*
 import com.github.qoiu.calculator.domain.model.operators.*
 import java.util.*
 
@@ -18,6 +16,7 @@ interface CalculatorMemory {
     fun result(): String
     fun output(): String
     fun pow()
+    fun join()
 
     class Base : CalculatorMemory {
         private var currentValue: Calculator = OperandEmpty()
@@ -64,6 +63,21 @@ interface CalculatorMemory {
             append(OperatorPow())
         }
 
+        override fun join() {
+            append(OperatorJoin())
+        }
+
+        fun sin(){
+            append(OperandSin())
+        }
+
+        private fun append(operandTrigonometric: OperandTrigonometric){
+            when(currentValue) {
+                is OperandEmpty -> currentValue = operandTrigonometric
+                is Operand<*> -> currentValue = operandTrigonometric.init(currentValue as Operand<*>)
+            }
+        }
+
         private fun append(operator: Operator) {
             if (currentValue is OperandEmpty) return
             if (currentValue is Operand<*>) {
@@ -73,10 +87,7 @@ interface CalculatorMemory {
             output()
         }
 
-        override fun result(): String {
-//            currentValue = currentValue.result()
-            return currentValue.result().toString()
-        }
+        override fun result(): String = currentValue.result().toString()
 
         override fun output(): String = currentValue.toString()
     }

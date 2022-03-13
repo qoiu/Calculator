@@ -24,8 +24,22 @@ abstract class Operator(
         return this
     }
 
+    override fun append(operator: OperatorJoin): Operator{
+       return if (operand2 is OperandEmpty) {
+            operand2 = OperatorJoin()
+            this
+        }else {
+            operand2 = OperatorMultiply(OperatorJoin(operand2))
+            this
+        }
+    }
+
     override fun append(operator: Operator): Operator {
         if (operand2 is OperandEmpty)
+            if(operator is OperatorJoin){
+                operand2 = OperatorJoin()
+                return this
+            }
             return if (operand is Operator) {
                 operand.append(operator)
             } else {
@@ -45,5 +59,23 @@ abstract class Operator(
             return this
         }
         return operand
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Operator
+
+        if (operand != other.operand) return false
+        if (operand2 != other.operand2) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = operand.hashCode()
+        result = 31 * result + operand2.hashCode()
+        return result
     }
 }

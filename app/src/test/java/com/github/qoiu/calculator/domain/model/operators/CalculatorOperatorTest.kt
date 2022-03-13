@@ -42,6 +42,19 @@ class CalculatorOperatorTest {
     }
 
     @Test
+    fun add_empty(){
+        val actual = OperatorAdd(OperatorAdd(OperandLong("1"))).append(OperatorSub())
+        val expected = OperatorSub(OperandLong("1"))
+        assertEquals(expected,actual)
+    }
+
+    @Test
+    fun add_with_operand(){
+        val actual = OperatorAdd(OperandLong("1")).append(OperatorSub())
+        assertEquals(OperatorSub(OperandLong("1")),actual)
+    }
+
+    @Test
     fun global_test() {
         //8+6*2/3-5=7
         var actual: Calculator = OperatorAdd(OperandDecimal("8")).append("6")
@@ -52,7 +65,21 @@ class CalculatorOperatorTest {
         actual = (actual as Operator).append(OperatorSub())
         actual = actual.append("5")
         actual = actual.result()
-
         assertEquals(7L, actual.value())
+    }
+
+
+    @Test
+    fun equals_hash() {
+        val o1 = OperatorAdd(OperandLong("23"))
+        val o2 = OperatorAdd(OperandLong("23"))
+        val o3 = OperatorSub(OperandLong("23"))
+        val o4 = OperatorAdd(OperandLong("25"))
+        assertTrue(o1 == o1)
+        assertTrue(o1 == o2)
+        assertTrue(o2 == o1)
+        assertTrue(!o1.equals(o3))
+        assertTrue(o1 != o4)
+        assertEquals(o1.hashCode(), o2.hashCode())
     }
 }

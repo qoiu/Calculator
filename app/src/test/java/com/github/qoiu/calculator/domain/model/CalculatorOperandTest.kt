@@ -15,12 +15,6 @@ class CalculatorOperandTest {
         assertEquals(OperandLong("56"), actual.result())
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun operand_long_upperBound() {
-        val actual: Operand<*> = OperandLong("123456789")
-        actual.append("2")
-    }
-
     @Test
     fun operand_delete() {
         var actual: Operand<*> = OperandLong("235.82")

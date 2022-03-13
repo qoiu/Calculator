@@ -46,4 +46,16 @@ class CalculatorMemoryTest {
         calculator.delete()
         assertEquals("14", calculator.result())
     }
+
+    @Test
+    fun global_pow_test(){
+        val calculator = CalculatorMemory.Base()
+        calculator.append("6")
+        calculator.add()
+        calculator.append("2")
+        calculator.pow()
+        calculator.append("6")
+        assertEquals("70", calculator.result())
+
+    }
 }

@@ -45,8 +45,6 @@ sealed class Operand<T : Number>(
     override fun toOperandDouble() = if (this is OperandDouble) this else OperandDouble(value)
     override fun toOperandDecimal() = if (this is OperandDecimal) this else OperandDecimal(value)
 
-    override fun weight(): Int = 0
-
     override fun toString(): String = value
 
     override fun equals(other: Any?): Boolean {

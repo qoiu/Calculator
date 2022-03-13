@@ -44,6 +44,7 @@ class CalculatorInteractor(private val memory: CalculatorMemory, private val buf
                     mutableStateFlow.value = OutputResult.Success(buffer.read())
                     return
                 }
+                "()"->memory.join()
                 "Del" -> memory.delete()
                 "C" -> memory.clear()
                 else -> throw IllegalStateException("Unknown operator")
