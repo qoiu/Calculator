@@ -1,6 +1,7 @@
 package com.github.qoiu.calculator.data
 
 import com.github.qoiu.calculator.domain.model.Calculator
+import com.github.qoiu.calculator.domain.model.Calculator.*
 import com.github.qoiu.calculator.domain.model.operands.*
 import com.github.qoiu.calculator.domain.model.operators.*
 import java.util.*
@@ -71,19 +72,16 @@ interface CalculatorMemory {
             append(OperandSin())
         }
 
-        private fun append(operandTrigonometric: OperandTrigonometric){
+        private fun append(operandTrigonometric: BaseTrigonometricOperand){
             when(currentValue) {
                 is OperandEmpty -> currentValue = operandTrigonometric
-                is Operand<*> -> currentValue = operandTrigonometric.init(currentValue as Operand<*>)
+                is Operand -> currentValue = operandTrigonometric.init(currentValue as BaseOperand<*>)
             }
         }
 
-        private fun append(operator: Operator) {
+        private fun append(operator: BaseOperator) {
             if (currentValue is OperandEmpty) return
-            if (currentValue is Operand<*>) {
-                currentValue = operator.init(currentValue.result().toOperandDecimal())
-            } else
-                currentValue = (currentValue as Operator).append(operator)
+            currentValue = currentValue.append(operator)
             output()
         }
 

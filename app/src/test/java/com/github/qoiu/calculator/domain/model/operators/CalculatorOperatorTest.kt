@@ -31,7 +31,7 @@ class CalculatorOperatorTest {
         assertEquals("2+", actual.toString())
         assertEquals(OperatorAdd::class.java, actual.javaClass)
         actual = actual.delete()
-        assertEquals(OperandLong("2"), actual)
+        assertEquals(OperandLong("2"), actual.result())
     }
 
     @Test
@@ -39,13 +39,6 @@ class CalculatorOperatorTest {
         var actual: Calculator = OperatorAdd(OperandDecimal("0.25"))
         actual = actual.append("0.75").result()
         assertEquals(OperandLong("1"), actual)
-    }
-
-    @Test
-    fun add_empty(){
-        val actual = OperatorAdd(OperatorAdd(OperandLong("1"))).append(OperatorSub())
-        val expected = OperatorSub(OperandLong("1"))
-        assertEquals(expected,actual)
     }
 
     @Test
@@ -58,14 +51,15 @@ class CalculatorOperatorTest {
     fun global_test() {
         //8+6*2/3-5=7
         var actual: Calculator = OperatorAdd(OperandDecimal("8")).append("6")
-        actual = (actual as Operator).append(OperatorMultiply())
+        actual = (actual as BaseOperator).append(OperatorMultiply())
         actual = actual.append("2")
-        actual = (actual as Operator).append(OperatorDiv())
+        actual = (actual as BaseOperator).append(OperatorDiv())
         actual = actual.append("3")
-        actual = (actual as Operator).append(OperatorSub())
+        actual = (actual as BaseOperator).append(OperatorSub())
         actual = actual.append("5")
         actual = actual.result()
-        assertEquals(7L, actual.value())
+        assertEquals(OperandLong("7"), actual)
+        assertEquals("7", actual.toString())
     }
 
 

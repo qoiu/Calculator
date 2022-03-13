@@ -1,16 +1,15 @@
 package com.github.qoiu.calculator.domain.model.operators
 
 import com.github.qoiu.calculator.domain.model.Calculator
-import com.github.qoiu.calculator.domain.model.operands.Operand
 import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
 
 
-abstract class Operator(
+abstract class BaseOperator(
     protected val operand: Calculator,
     protected var operand2: Calculator = OperandEmpty()
-) : Calculator, Operation.OperationDecimal {
+) : Calculator.Operator, Calculator.OperatorDecimal {
 
-    override fun result(): Operand<*> =
+    override fun result(): Calculator.Operand =
         if (operand2 is OperandEmpty)
             operand.result()
         else
@@ -24,38 +23,23 @@ abstract class Operator(
         return this
     }
 
-    override fun append(operator: OperatorJoin): Operator{
-       return if (operand2 is OperandEmpty) {
-            operand2 = OperatorJoin()
-            this
-        }else {
-            operand2 = OperatorMultiply(OperatorJoin(operand2))
-            this
-        }
-    }
-
-    override fun append(operator: Operator): Operator {
-        if (operand2 is OperandEmpty)
-            if(operator is OperatorJoin){
-                operand2 = OperatorJoin()
-                return this
-            }
-            return if (operand is Operator) {
-                operand.append(operator)
+    override fun append(operator: Calculator.Operator): Calculator.Operator {
+        return if (operand2 is OperandEmpty)
+            operator.init(operand)
+        else
+            if (weight() < operator.weight()) {
+                operand2 = operator.init(operand2)
+                this
             } else {
-                operator.init(operand)
+                operator.init(this)
             }
-        return if (weight() < operator.weight()) {
-            operand2 = operator.init(operand2)
-            this
-        } else {
-            operator.init(this)
-        }
     }
 
     override fun delete(): Calculator {
         if (operand2 !is OperandEmpty) {
             this.operand2 = operand2.delete()
+            if (operand2 is Calculator.Operand) operand2 =
+                (operand2 as Calculator.Operand).fixValue()
             return this
         }
         return operand
@@ -65,7 +49,7 @@ abstract class Operator(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Operator
+        other as BaseOperator
 
         if (operand != other.operand) return false
         if (operand2 != other.operand2) return false

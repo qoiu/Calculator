@@ -1,6 +1,5 @@
 package com.github.qoiu.calculator.domain.model.operands
 
-import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
 import org.junit.Test
 
 class OperandEmptyTest{

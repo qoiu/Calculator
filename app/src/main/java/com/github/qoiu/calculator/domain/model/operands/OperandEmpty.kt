@@ -1,8 +1,8 @@
 package com.github.qoiu.calculator.domain.model.operands
 
-class OperandEmpty : Operand<Number>("", 20) {
+class OperandEmpty : BaseOperand<Number>("") {
     private val emptyException = IllegalStateException("Empty don't have any result or value")
-    override fun result(): Operand<*> {
+    override fun result(): BaseOperand<*> {
         throw emptyException
     }
 

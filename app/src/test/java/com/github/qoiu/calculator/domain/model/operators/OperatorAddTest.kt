@@ -13,7 +13,7 @@ class OperatorAddTest {
         TestCase("0.0", "0.3", OperandDouble("0.3")),
         TestCase("1234567.0", "10.0", OperandLong("1234577")),
         TestCase("4567890.5", "10.5", OperandLong("4567901")),
-        TestCase("888888888888.0", "888888888888.0", OperandDecimal("1777777777776")),
+        TestCase("888888888888.0", "888888888888.0", OperandDouble("1.777777777776E12")),
         TestCase("1234567890.23", "10.25", OperandDouble("1.23456790048E9")),
         TestCase("25", "25", OperandLong("50")),
         TestCase("25", "-25", OperandLong("0"))

@@ -1,44 +1,36 @@
 package com.github.qoiu.calculator.domain.model.operands
 
 import com.github.qoiu.calculator.domain.model.Calculator
+import com.github.qoiu.calculator.domain.model.Calculator.Operand
 
-sealed class Operand<T : Number>(
-    protected var value: String,
-    private val lengthMax: Int
-) : Calculator, OperandMethods {
+sealed class BaseOperand<T : Number>(
+    protected var value: String
+) : Operand {
     abstract fun value(): T
 
-    override fun result(): Operand<*> = classCheck().fixValue()
+    override fun result(): Operand = fixValue()
 
-    override fun append(symbol: String): Operand<*> {
+    override fun append(symbol: String): Operand {
         this.value = "$value$symbol"
-        return classCheck()
+        return fixValue()
     }
 
-    override fun delete(): Operand<*> {
+    override fun append(operator: Calculator.Operator) = operator.init(this)
+
+    override fun delete(): Operand {
         if (value.isNotEmpty()) {
             this.value = value.substring(0, value.length - 1)
         }
-        return classCheck()
-    }
-
-    fun classCheck(): Operand<*> {
-        if (value.isBlank())
-            return OperandEmpty()
-        return if (value.length > 15) {
-            toOperandDecimal()
-        } else if (value.contains('.')) {
-            toOperandDouble()
-        } else {
-            toOperandLong()
-        }
-    }
-
-    /**
-     * if value is incorrect for this type, this method try to return Operand of correct type
-     */
-    override fun fixValue(): Operand<*> {
         return this
+    }
+
+    override fun fixValue(): Operand {
+        return when {
+            value.isBlank() -> OperandEmpty()
+            value.length > 15 -> toOperandDecimal()
+            value.contains('.') -> toOperandDouble()
+            else -> toOperandLong()
+        }
     }
 
     override fun toOperandLong() = if (this is OperandLong) this else OperandLong(value)
@@ -52,7 +44,7 @@ sealed class Operand<T : Number>(
             return true
         if (javaClass != other?.javaClass)
             return false
-        other as Operand<*>
+        other as BaseOperand<*>
         if (value != other.value)
             return false
         return true

@@ -1,15 +1,17 @@
 package com.github.qoiu.calculator.domain.model.operands
 
-abstract class OperandTrigonometric(value: String): Operand<Double>(value,9) {
+import com.github.qoiu.calculator.domain.model.Calculator
 
-    fun init(operand: Operand<*>): OperandTrigonometric{
+abstract class BaseTrigonometricOperand(value: String): BaseOperand<Double>(value) {
+
+    fun init(operand: BaseOperand<*>): BaseTrigonometricOperand{
         return OperandSin(operand.value().toString())
     }
 
-    override fun result(): Operand<*> =
+    override fun result(): Calculator.Operand  =
         OperandDouble(operation(Math.toRadians(value())).toString()).fixValue()
 
-    override fun append(symbol: String): Operand<*> {
+    override fun append(symbol: String): BaseOperand<*> {
         this.value = "$value$symbol"
         return this
     }
