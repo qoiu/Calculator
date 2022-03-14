@@ -20,11 +20,10 @@ class OutputFragment : BaseFragment<OutputViewModel, FragmentOutputBinding>() {
         viewModel.subscribe(this) {
             Log.w("Output", it.toString())
             when (it) {
-                is OutputResult.Success -> binding.text.text =
-                    if (it.result.isNotEmpty())
-                        "${it.arguments}=${it.result}"
-                    else
-                        it.arguments
+                is OutputResult.Success -> {
+                    binding.text.text = it.arguments
+                    binding.result.text = it.result
+                }
                 is OutputResult.Error -> Toast.makeText(
                     context,
                     it.e.message ?: "error",

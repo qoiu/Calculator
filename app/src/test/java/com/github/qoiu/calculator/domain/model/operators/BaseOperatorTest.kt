@@ -1,12 +1,14 @@
 package com.github.qoiu.calculator.domain.model.operators
 
-import com.github.qoiu.calculator.domain.model.Calculator
+import com.github.qoiu.calculator.domain.model.CalculatorObject
 import com.github.qoiu.calculator.domain.model.operands.OperandDecimal
 import com.github.qoiu.calculator.domain.model.operands.OperandLong
+import com.github.qoiu.calculator.domain.model.trigonometric.TrigonometricSin
 import org.junit.Assert.*
+
 import org.junit.Test
 
-class CalculatorOperatorTest {
+class BaseOperatorTest {
 
     @Test
     fun append() {
@@ -18,7 +20,7 @@ class CalculatorOperatorTest {
 
     @Test
     fun delete() {
-        var actual: Calculator = OperatorAdd(OperandDecimal("2").fixValue())
+        var actual: CalculatorObject = OperatorAdd(OperandDecimal("2").fixValue())
         actual = actual.append("2")
         actual = actual.append("3")
         actual = actual.append("4")
@@ -36,21 +38,37 @@ class CalculatorOperatorTest {
 
     @Test
     fun extra_test() {
-        var actual: Calculator = OperatorAdd(OperandDecimal("0.25"))
+        var actual: CalculatorObject = OperatorAdd(OperandDecimal("0.25"))
         actual = actual.append("0.75").result()
         assertEquals(OperandLong("1"), actual)
     }
 
     @Test
-    fun add_with_operand(){
-        val actual = OperatorAdd(OperandLong("1")).append(OperatorSub())
-        assertEquals(OperatorSub(OperandLong("1")),actual)
+    fun add_with_operand() {
+        var actual: CalculatorObject = OperatorAdd().init(OperandLong("2"))
+        actual = actual.append(OperatorAdd())
+        actual = actual.append("32")
+        actual = actual.append(OperatorSub())
+        actual = actual.append(OperatorMultiply())
+        actual = actual.append("2")
+        assertEquals(OperandLong("66"), actual.result())
+    }
+
+    @Test
+    fun add_with_operand_reverse() {
+        var actual: CalculatorObject = OperatorAdd().init(OperandLong("2"))
+        actual = actual.append(OperatorAdd())
+        actual = actual.append("32")
+        actual = actual.append(OperatorMultiply())
+        actual = actual.append(OperatorSub())
+        actual = actual.append("2")
+        assertEquals(OperandLong("32"), actual.result())
     }
 
     @Test
     fun global_test() {
         //8+6*2/3-5=7
-        var actual: Calculator = OperatorAdd(OperandDecimal("8")).append("6")
+        var actual: CalculatorObject = OperatorAdd(OperandDecimal("8"), OperandLong("6"))
         actual = (actual as BaseOperator).append(OperatorMultiply())
         actual = actual.append("2")
         actual = (actual as BaseOperator).append(OperatorDiv())
@@ -75,5 +93,23 @@ class CalculatorOperatorTest {
         assertTrue(!o1.equals(o3))
         assertTrue(o1 != o4)
         assertEquals(o1.hashCode(), o2.hashCode())
+    }
+
+    @Test
+    fun trigonom_append() {
+        val actual = OperatorAdd(OperandLong("25")).append("12")
+        assertEquals(
+            OperatorAdd(OperandLong("25"), TrigonometricSin("12")),
+            actual.append(TrigonometricSin("12"))
+        )
+    }
+
+    @Test
+    fun trigonom_append_empty() {
+        val actual = OperatorAdd(OperandLong("25"))
+        assertEquals(
+            OperatorAdd(OperandLong("25"), TrigonometricSin()),
+            actual.append(TrigonometricSin())
+        )
     }
 }

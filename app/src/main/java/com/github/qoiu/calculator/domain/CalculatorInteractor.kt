@@ -19,7 +19,7 @@ class CalculatorInteractor(private val memory: CalculatorMemory, private val buf
     override fun appendNumber(value: String) {
         try {
             memory.append(value)
-            mutableStateFlow.value = OutputResult.Success(memory.output())
+            output()
         } catch (e: Exception) {
             mutableStateFlow.value = OutputResult.Error(e)
         }
@@ -33,10 +33,8 @@ class CalculatorInteractor(private val memory: CalculatorMemory, private val buf
                 "*" -> memory.multiply()
                 "/" -> memory.div()
                 "^" -> memory.pow()
-                "=" -> {
-                    mutableStateFlow.value = OutputResult.Success(memory.output(), memory.result())
-                    return
-                }
+                "=" -> memory.rewrite()
+                "sin" -> memory.sin()
                 "m+" -> buffer.plus(memory.result().toBigDecimal())
                 "m-" -> buffer.minus(memory.result().toBigDecimal())
                 "ms" -> buffer.save(memory.result().toBigDecimal())
@@ -44,14 +42,23 @@ class CalculatorInteractor(private val memory: CalculatorMemory, private val buf
                     mutableStateFlow.value = OutputResult.Success(buffer.read())
                     return
                 }
-                "()"->memory.join()
+                "()" -> memory.join()
                 "Del" -> memory.delete()
                 "C" -> memory.clear()
                 else -> throw IllegalStateException("Unknown operator")
             }
-            mutableStateFlow.value = OutputResult.Success(memory.output())
+            output()
         } catch (e: Exception) {
             mutableStateFlow.value = OutputResult.Error(e)
         }
+    }
+
+    private fun output() {
+        val output = memory.output()
+        val result = memory.result()
+        mutableStateFlow.value = if (output != result)
+            OutputResult.Success(output, result)
+        else
+            OutputResult.Success(result)
     }
 }

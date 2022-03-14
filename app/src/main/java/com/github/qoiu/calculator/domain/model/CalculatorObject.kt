@@ -5,7 +5,7 @@ import com.github.qoiu.calculator.domain.model.operands.OperandDouble
 import com.github.qoiu.calculator.domain.model.operands.OperandLong
 import java.math.BigDecimal
 
-interface Calculator {
+interface CalculatorObject {
     /**
      * @return result of operation/operand as Operand
      */
@@ -15,21 +15,30 @@ interface Calculator {
      * Append any symbol like numbers
      * @return Operand with different value
      */
-    fun append(symbol: String): Calculator
+    fun append(symbol: String): CalculatorObject
 
     /**
      * Apply new Operator and return it
      */
-    fun append(operator: Operator): Operator
+    fun append(operator: Operator): CalculatorObject
+
+    /**
+     * Apply new Operator and return it
+     */
+    fun append(operator: Trigonometric): CalculatorObject
 
     /**
      * Delete last symbol from expression
      * @return new expression
      */
-    fun delete(): Calculator
+    fun delete(): CalculatorObject
 
-    interface Operator: Calculator {
-        fun init(calculator: Calculator): Operator
+    interface Trigonometric : CalculatorObject {
+        fun init(calculator: CalculatorObject): CalculatorObject
+    }
+
+    interface Operator : CalculatorObject {
+        fun init(calculator: CalculatorObject): CalculatorObject
 
         /**
          * Weight of operation define it sequence
@@ -41,7 +50,7 @@ interface Calculator {
         fun operation(o1: BigDecimal, o2: BigDecimal): Operand
     }
 
-    interface Operand: Calculator {
+    interface Operand : CalculatorObject {
         fun toOperandLong(): OperandLong
         fun toOperandDouble(): OperandDouble
         fun toOperandDecimal(): OperandDecimal

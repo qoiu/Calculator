@@ -1,14 +1,15 @@
 package com.github.qoiu.calculator.data
 
-import com.github.qoiu.calculator.domain.model.Calculator
-import com.github.qoiu.calculator.domain.model.Calculator.*
+import com.github.qoiu.calculator.domain.model.CalculatorObject
 import com.github.qoiu.calculator.domain.model.operands.*
 import com.github.qoiu.calculator.domain.model.operators.*
+import com.github.qoiu.calculator.domain.model.trigonometric.TrigonometricSin
 import java.util.*
 
 interface CalculatorMemory {
     fun append(value: String)
     fun delete()
+    fun rewrite()
     fun clear()
     fun add()
     fun sub()
@@ -18,11 +19,12 @@ interface CalculatorMemory {
     fun output(): String
     fun pow()
     fun join()
+    fun sin()
 
     class Base : CalculatorMemory {
-        private var currentValue: Calculator = OperandEmpty()
-        private var value: Calculator = OperandEmpty()
-        private val operations: Stack<Calculator> = Stack()
+        private var currentValue: CalculatorObject = OperandEmpty()
+        private var value: CalculatorObject = OperandEmpty()
+        private val operations: Stack<CalculatorObject> = Stack()
 
         override fun append(value: String) {
             if (currentValue is OperandEmpty) {
@@ -31,62 +33,56 @@ interface CalculatorMemory {
             } else {
                 currentValue = currentValue.append(value)
             }
-            output()
         }
 
         override fun delete() {
             currentValue = currentValue.delete()
-            output()
         }
 
         override fun clear() {
             currentValue = OperandEmpty()
-            output()
+        }
+
+        override fun rewrite() {
+            currentValue = currentValue.result()
         }
 
         override fun add() {
-            append(OperatorAdd())
+            currentValue = currentValue.append(OperatorAdd())
         }
 
         override fun sub() {
-            append(OperatorSub())
+            currentValue = currentValue.append(OperatorSub())
         }
 
         override fun multiply() {
-            append(OperatorMultiply())
+            currentValue = currentValue.append(OperatorMultiply())
         }
 
         override fun div() {
-            append(OperatorDiv())
+            currentValue = currentValue.append(OperatorDiv())
         }
 
         override fun pow() {
-            append(OperatorPow())
+            currentValue = currentValue.append(OperatorPow())
         }
 
         override fun join() {
-            append(OperatorJoin())
+            currentValue = currentValue.append(OperatorJoin())
         }
 
-        fun sin(){
-            append(OperandSin())
+        override fun sin() {
+            currentValue = currentValue.append(TrigonometricSin())
         }
 
-        private fun append(operandTrigonometric: BaseTrigonometricOperand){
-            when(currentValue) {
-                is OperandEmpty -> currentValue = operandTrigonometric
-                is Operand -> currentValue = operandTrigonometric.init(currentValue as BaseOperand<*>)
-            }
-        }
-
-        private fun append(operator: BaseOperator) {
-            if (currentValue is OperandEmpty) return
-            currentValue = currentValue.append(operator)
-            output()
-        }
-
+        /**
+         * @return result of all operation and save it in memory
+         */
         override fun result(): String = currentValue.result().toString()
 
+        /**
+         * @return expression
+         */
         override fun output(): String = currentValue.toString()
     }
 }

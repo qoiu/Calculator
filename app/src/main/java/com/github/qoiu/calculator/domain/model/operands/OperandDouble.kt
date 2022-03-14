@@ -1,11 +1,11 @@
 package com.github.qoiu.calculator.domain.model.operands
 
-import com.github.qoiu.calculator.domain.model.Calculator
+import com.github.qoiu.calculator.domain.model.CalculatorObject
 
 open class OperandDouble(value: String) :
     BaseOperand<Double>(value) {
 
-    override fun fixValue(): Calculator.Operand =
+    override fun fixValue(): CalculatorObject.Operand =
         try {
             val doubleValue = value.toDouble()
             val longValue = doubleValue.toLong()

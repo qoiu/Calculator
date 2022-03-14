@@ -16,8 +16,8 @@ class KeyboardFragment : BaseFragment<KeyboardViewModel, FragmentKeyboardBinding
 
     override fun init(binding: FragmentKeyboardBinding) {
         val recycler = binding.keyboardRecycler
-        val keyboard = KeyboardData(viewModel)
-        recycler.layoutManager = GridLayoutManager(context, keyboard.defaultKeyboard.gridSize)
-        recycler.adapter = KeyboardAdapter(keyboard.defaultKeyboard.keys)
+        val keyboard = Keyboard.Default(viewModel)
+        recycler.layoutManager = GridLayoutManager(context, keyboard.cells)
+        recycler.adapter = KeyboardAdapter(keyboard.list)
     }
 }

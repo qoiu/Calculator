@@ -8,7 +8,7 @@ class CalculatorOperandTest {
 
     @Test
     fun operand_append() {
-        var actual: Calculator = OperandEmpty()
+        var actual: CalculatorObject = OperandEmpty()
         actual = actual.append("5")
         assertEquals(OperandLong("5"), actual.result())
         actual = actual.append("6")
@@ -17,7 +17,7 @@ class CalculatorOperandTest {
 
     @Test
     fun operand_delete() {
-        var actual: Calculator = OperandDouble("235.82")
+        var actual: CalculatorObject = OperandDouble("235.82")
         actual = actual.delete()
         assertEquals(OperandDouble("235.8"), actual.result())
         actual = actual.delete()

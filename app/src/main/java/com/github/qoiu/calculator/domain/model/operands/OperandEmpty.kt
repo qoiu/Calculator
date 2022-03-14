@@ -1,14 +1,21 @@
 package com.github.qoiu.calculator.domain.model.operands
 
-class OperandEmpty : BaseOperand<Number>("") {
-    private val emptyException = IllegalStateException("Empty don't have any result or value")
-    override fun result(): BaseOperand<*> {
-        throw emptyException
-    }
+import com.github.qoiu.calculator.domain.model.CalculatorObject
+import com.github.qoiu.calculator.domain.model.operators.OperatorJoin
 
-    override fun value(): Number {
-        throw emptyException
-    }
+class OperandEmpty : BaseOperand<Number>("") {
+  override fun result(): BaseOperand<*> = this
+
+    override fun append(operator: CalculatorObject.Trigonometric) = operator
+
+    override fun append(operator: CalculatorObject.Operator): CalculatorObject =
+        if(operator is OperatorJoin){
+            operator
+        }else{
+            this
+        }
+
+    override fun value(): Number = 0
 
     override fun toString(): String = ""
 }

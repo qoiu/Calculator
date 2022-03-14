@@ -1,7 +1,7 @@
 package com.github.qoiu.calculator.domain.model.operands
 
-import com.github.qoiu.calculator.domain.model.Calculator
-import com.github.qoiu.calculator.domain.model.Calculator.Operand
+import com.github.qoiu.calculator.domain.model.CalculatorObject
+import com.github.qoiu.calculator.domain.model.CalculatorObject.Operand
 
 sealed class BaseOperand<T : Number>(
     protected var value: String
@@ -15,7 +15,10 @@ sealed class BaseOperand<T : Number>(
         return fixValue()
     }
 
-    override fun append(operator: Calculator.Operator) = operator.init(this)
+    override fun append(operator: CalculatorObject.Operator): CalculatorObject = operator.init(this)
+
+    override fun append(operator: CalculatorObject.Trigonometric): CalculatorObject =
+        operator.init(this)
 
     override fun delete(): Operand {
         if (value.isNotEmpty()) {

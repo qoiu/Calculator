@@ -1,15 +1,14 @@
 package com.github.qoiu.calculator.domain.model.operators
 
-import com.github.qoiu.calculator.domain.model.Calculator
+import com.github.qoiu.calculator.domain.model.CalculatorObject
 import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
 
-
 abstract class BaseOperator(
-    protected val operand: Calculator,
-    protected var operand2: Calculator = OperandEmpty()
-) : Calculator.Operator, Calculator.OperatorDecimal {
+    protected val operand: CalculatorObject,
+    protected var operand2: CalculatorObject = OperandEmpty()
+) : CalculatorObject.Operator, CalculatorObject.OperatorDecimal {
 
-    override fun result(): Calculator.Operand =
+    override fun result(): CalculatorObject.Operand =
         if (operand2 is OperandEmpty)
             operand.result()
         else
@@ -18,28 +17,37 @@ abstract class BaseOperator(
                 operand2.result().toOperandDecimal().value()
             ).fixValue().result()
 
-    override fun append(symbol: String): Calculator {
+    override fun append(symbol: String): CalculatorObject {
         this.operand2 = operand2.append(symbol)
         return this
     }
 
-    override fun append(operator: Calculator.Operator): Calculator.Operator {
-        return if (operand2 is OperandEmpty)
-            operator.init(operand)
-        else
-            if (weight() < operator.weight()) {
-                operand2 = operator.init(operand2)
-                this
-            } else {
-                operator.init(this)
-            }
+    override fun append(operator: CalculatorObject.Operator): CalculatorObject {
+        if (operand2 is OperandEmpty)
+            return operand.append(operator)
+        return if (operator.weight() > weight()) {
+            operand2 = operand2.append(operator)
+            this
+        } else {
+            operator.init(this)
+        }
     }
 
-    override fun delete(): Calculator {
+    override fun append(operator: CalculatorObject.Trigonometric): CalculatorObject.Operator {
+        return if (operand2 is OperandEmpty) {
+            operand2 = operator
+            this
+        } else {
+            operand2 = operator.init(operand2)
+            this
+        }
+    }
+
+    override fun delete(): CalculatorObject {
         if (operand2 !is OperandEmpty) {
             this.operand2 = operand2.delete()
-            if (operand2 is Calculator.Operand) operand2 =
-                (operand2 as Calculator.Operand).fixValue()
+            if (operand2 is CalculatorObject.Operand) operand2 =
+                (operand2 as CalculatorObject.Operand).fixValue()
             return this
         }
         return operand
