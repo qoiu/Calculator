@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.output.OutputFragment"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".presentation.output.OutputFragment">
 
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="42sp"/>
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/result_output" />
+
     <TextView
         android:id="@+id/result"
+        style="@style/text_result"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="38sp"
-        android:textColor="#7755ff55"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

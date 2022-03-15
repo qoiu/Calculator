@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="key">20sp</dimen>
+    <dimen name="result">36sp</dimen>
+    <dimen name="result_output">36sp</dimen>
+    <dimen name="key_height">48dp</dimen>
+    <dimen name="key_margin">8dp</dimen>
+    <dimen name="key_text">20sp</dimen>
+    <dimen name="key_padding">8dp</dimen>
+</resources>

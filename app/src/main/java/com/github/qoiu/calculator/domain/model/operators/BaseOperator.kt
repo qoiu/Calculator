@@ -1,12 +1,13 @@
 package com.github.qoiu.calculator.domain.model.operators
 
+import com.github.qoiu.calculator.domain.model.BaseCalculatorObject
 import com.github.qoiu.calculator.domain.model.CalculatorObject
 import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
 
 abstract class BaseOperator(
     protected val operand: CalculatorObject,
     protected var operand2: CalculatorObject = OperandEmpty()
-) : CalculatorObject.Operator, CalculatorObject.OperatorDecimal {
+) : BaseCalculatorObject(), CalculatorObject.Operator, CalculatorObject.OperatorDecimal {
 
     override fun result(): CalculatorObject.Operand =
         if (operand2 is OperandEmpty)
@@ -33,6 +34,19 @@ abstract class BaseOperator(
         }
     }
 
+    override fun lastOperand(): CalculatorObject.Operand = operand2.lastOperand()
+
+
+    override fun append(operand: CalculatorObject.Operand): CalculatorObject {
+        return if (operand2 is OperandEmpty) {
+            operand2 = operand
+            this
+        } else {
+            operand2 = operand2.append(operand)
+            this
+        }
+    }
+
     override fun append(operator: CalculatorObject.Trigonometric): CalculatorObject.Operator {
         return if (operand2 is OperandEmpty) {
             operand2 = operator
@@ -41,6 +55,17 @@ abstract class BaseOperator(
             operand2 = operator.init(operand2)
             this
         }
+    }
+
+    override fun closeOpenedJoin(hasOpenJoin: Boolean): Boolean {
+        if (operand2 is OperandEmpty) {
+            operand2 = OperatorJoin()
+            return false
+        }
+        return if (!operand.closeOpenedJoin(hasOpenJoin))
+            false
+        else
+            operand2.closeOpenedJoin(hasOpenJoin)
     }
 
     override fun delete(): CalculatorObject {
@@ -52,6 +77,7 @@ abstract class BaseOperator(
         }
         return operand
     }
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

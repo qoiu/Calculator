@@ -5,7 +5,7 @@ import java.math.BigDecimal
 interface BufferMemory {
     fun plus(value: BigDecimal)
     fun minus(value: BigDecimal)
-    fun save(value: BigDecimal)
+    fun clear()
     fun read(): String
 
     class Base : BufferMemory {
@@ -18,8 +18,8 @@ interface BufferMemory {
             cell = cell.minus(value)
         }
 
-        override fun save(value: BigDecimal) {
-            cell = value
+        override fun clear() {
+            cell = BigDecimal(0)
         }
 
         override fun read(): String = cell.toString()

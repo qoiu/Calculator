@@ -2,6 +2,8 @@ package com.github.qoiu.calculator.domain.model.operators
 
 import com.github.qoiu.calculator.domain.model.CalculatorObject
 import com.github.qoiu.calculator.domain.model.operands.OperandDecimal
+import com.github.qoiu.calculator.domain.model.operands.OperandDouble
+import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
 import com.github.qoiu.calculator.domain.model.operands.OperandLong
 import com.github.qoiu.calculator.domain.model.trigonometric.TrigonometricSin
 import org.junit.Assert.*
@@ -16,6 +18,29 @@ class BaseOperatorTest {
         actual.append("2")
         assertEquals(OperandLong("4"), actual.result())
         assertEquals("2+2", actual.toString())
+    }
+
+    @Test
+    fun last_operand() {
+        val expected = OperandDouble("2.3")
+        val actual = OperatorMultiply(OperandLong("23"), expected)
+        assertEquals(expected, actual.lastOperand())
+    }
+
+    @Test
+    fun append_operand() {
+        val operand = OperandDouble("2.3")
+        val expected = OperatorMultiply(OperandLong("23"), operand)
+        val actual = OperatorMultiply(OperandLong("23"), OperandEmpty())
+        assertEquals(expected, actual.append(operand))
+    }
+
+    @Test
+    fun append_operand_not_empty() {
+        val operand = OperandDouble("2.3")
+        val expected = OperatorMultiply(OperandLong("23"), OperatorAdd(operand, operand))
+        val actual = OperatorMultiply(OperandLong("23"), operand)
+        assertEquals(expected, actual.append(operand))
     }
 
     @Test
@@ -93,6 +118,7 @@ class BaseOperatorTest {
         assertTrue(!o1.equals(o3))
         assertTrue(o1 != o4)
         assertEquals(o1.hashCode(), o2.hashCode())
+        assertNotEquals(o1.hashCode(), o4.hashCode())
     }
 
     @Test

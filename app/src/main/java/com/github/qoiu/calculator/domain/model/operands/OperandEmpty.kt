@@ -15,7 +15,10 @@ class OperandEmpty : BaseOperand<Number>("") {
             this
         }
 
+    override fun append(operand: CalculatorObject.Operand): CalculatorObject = operand
+
     override fun value(): Number = 0
 
     override fun toString(): String = ""
+    override fun mod() {}
 }

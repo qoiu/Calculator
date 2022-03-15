@@ -25,6 +25,11 @@ interface CalculatorObject {
     /**
      * Apply new Operator and return it
      */
+    fun append(operand: Operand): CalculatorObject
+
+    /**
+     * Apply new Operator and return it
+     */
     fun append(operator: Trigonometric): CalculatorObject
 
     /**
@@ -32,6 +37,17 @@ interface CalculatorObject {
      * @return new expression
      */
     fun delete(): CalculatorObject
+
+    /**
+     *Close open bracket if possible
+     * @return true if has open bracket, false if not
+     */
+    fun closeOpenedJoin(hasOpenJoin: Boolean): Boolean
+
+    /**
+     * @return last operand in branch
+     */
+    fun lastOperand(): Operand
 
     interface Trigonometric : CalculatorObject {
         fun init(calculator: CalculatorObject): CalculatorObject
@@ -54,6 +70,8 @@ interface CalculatorObject {
         fun toOperandLong(): OperandLong
         fun toOperandDouble(): OperandDouble
         fun toOperandDecimal(): OperandDecimal
+
+        fun mod()
 
         /**
          * This method shouldn't have any side effects. You may decide if you want to apply changes

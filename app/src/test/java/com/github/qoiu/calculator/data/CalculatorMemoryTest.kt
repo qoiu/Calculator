@@ -67,7 +67,7 @@ class CalculatorMemoryTest {
         assertEquals("5", calculator.result())
         calculator.multiply()
         calculator.append("3")
-        assertEquals("-1", calculator.result())
+        assertEquals("(-1)", calculator.result())
         calculator.add()
         calculator.append("5")
         assertEquals("4", calculator.result())

@@ -26,8 +26,11 @@ class KeyboardAdapter(private val list: List<UiKey> = emptyList()) :
     inner class KeyboardHolder(private val view: KeyboardItemBinding) :
         RecyclerView.ViewHolder(view.root) {
         fun bind(item: UiKey) {
-            view.text.text = item.value
-            view.text.setOnClickListener { item.action() }
+            view.text.text = item.getText()
+            view.text.setOnClickListener {
+                item.action()
+                if (item is UiKey.Switcher) view.text.text = item.getText()
+            }
         }
     }
 }

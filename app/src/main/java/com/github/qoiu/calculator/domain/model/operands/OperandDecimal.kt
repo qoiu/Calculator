@@ -16,6 +16,10 @@ class OperandDecimal(value: String) :
         return simplify()
     }
 
+    override fun mod() {
+        value = value().negate().toString()
+    }
+
     private fun simplify(): CalculatorObject.Operand {
         for (i in value.length - 1 downTo 1) {
             if (value.contains('.') && value[i] == '0' || value[i] == '.') {

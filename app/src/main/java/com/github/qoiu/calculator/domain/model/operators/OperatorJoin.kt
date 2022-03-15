@@ -16,16 +16,33 @@ data class OperatorJoin(
         return this
     }
 
+    override fun append(operand: CalculatorObject.Operand): CalculatorObject =
+        this.operand.append(operand)
+
     override fun append(operator: CalculatorObject.Operator): CalculatorObject {
         if (!isOpen) return operator.init(this)
-        return if (operator is OperatorJoin && operand !is OperandEmpty) {
-            isOpen = false
+        return if (operator is OperatorJoin) {
+            closeOpenedJoin(true)
+            if (isOpen) operand = operator
+            this
+        } else if (operand is OperandEmpty) {
+            operand = operator
             this
         } else {
             operand = operand.append(operator)
             this
         }
     }
+
+    override fun closeOpenedJoin(hasOpenJoin: Boolean): Boolean {
+        if (operand.closeOpenedJoin(hasOpenJoin) && isOpen && operand !is OperandEmpty) {
+            isOpen = false
+            return false
+        }
+        return hasOpenJoin
+    }
+
+    override fun lastOperand(): CalculatorObject.Operand = operand.lastOperand()
 
     override fun append(operator: CalculatorObject.Trigonometric): CalculatorObject {
         operand = operator.init(operand)

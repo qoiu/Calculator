@@ -13,5 +13,9 @@ class OperandLong(value: String) :
             super.fixValue()
     }
 
+    override fun mod() {
+        value = (value()*-1).toString()
+    }
+
     override fun value(): Long = this.value.toLong()
 }

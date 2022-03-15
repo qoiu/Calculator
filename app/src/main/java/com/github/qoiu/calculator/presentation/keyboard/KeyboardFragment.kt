@@ -1,5 +1,6 @@
 package com.github.qoiu.calculator.presentation.keyboard
 
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,8 +17,16 @@ class KeyboardFragment : BaseFragment<KeyboardViewModel, FragmentKeyboardBinding
 
     override fun init(binding: FragmentKeyboardBinding) {
         val recycler = binding.keyboardRecycler
-        val keyboard = Keyboard.Default(viewModel)
-        recycler.layoutManager = GridLayoutManager(context, keyboard.cells)
+        val keyboard =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                Keyboard.Extra(viewModel)
+            else
+                Keyboard.Default(viewModel)
+        val layout = GridLayoutManager(context, keyboard.cells)
+        recycler.suppressLayout(true)
+        recycler.layoutManager = layout
         recycler.adapter = KeyboardAdapter(keyboard.list)
     }
+
+
 }

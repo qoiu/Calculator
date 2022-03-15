@@ -9,21 +9,26 @@ import org.junit.Test
 class OperandEmptyTest {
 
     @Test
-    fun trigonometric_append(){
+    fun trigonometric_append() {
         val expected = TrigonometricSin()
-        assertEquals(expected,OperandEmpty().append(expected))
+        assertEquals(expected, OperandEmpty().append(expected))
     }
 
     @Test
-    fun operator_add_append(){
+    fun operator_add_append() {
         val expected = OperatorAdd()
-        assertEquals(OperandEmpty(),OperandEmpty().append(expected))
+        assertEquals(OperandEmpty(), OperandEmpty().append(expected))
     }
 
     @Test
-    fun operator_join_append(){
+    fun append() {
+        assertEquals(OperandLong("2"), OperandEmpty().append(OperandLong("2")))
+    }
+
+    @Test
+    fun operator_join_append() {
         val expected = OperatorJoin()
-        assertEquals(expected,OperandEmpty().append(expected))
+        assertEquals(expected, OperandEmpty().append(expected))
     }
 
     @Test
@@ -39,5 +44,13 @@ class OperandEmptyTest {
     @Test
     fun to_string() {
         assertEquals("", OperandEmpty().toString())
+    }
+
+
+    @Test
+    fun mod() {
+        val operand = OperandEmpty()
+        operand.mod()
+        assertEquals(OperandEmpty(), operand)
     }
 }

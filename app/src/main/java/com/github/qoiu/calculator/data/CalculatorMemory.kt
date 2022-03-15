@@ -1,10 +1,15 @@
 package com.github.qoiu.calculator.data
 
 import com.github.qoiu.calculator.domain.model.CalculatorObject
-import com.github.qoiu.calculator.domain.model.operands.*
+import com.github.qoiu.calculator.domain.model.RadDegSwitcher
+import com.github.qoiu.calculator.domain.model.operands.ConstantE
+import com.github.qoiu.calculator.domain.model.operands.ConstantPi
+import com.github.qoiu.calculator.domain.model.operands.OperandEmpty
+import com.github.qoiu.calculator.domain.model.operands.OperandLong
 import com.github.qoiu.calculator.domain.model.operators.*
+import com.github.qoiu.calculator.domain.model.trigonometric.TrigonometricCos
 import com.github.qoiu.calculator.domain.model.trigonometric.TrigonometricSin
-import java.util.*
+import com.github.qoiu.calculator.domain.model.trigonometric.TrigonometricSqrt
 
 interface CalculatorMemory {
     fun append(value: String)
@@ -20,18 +25,24 @@ interface CalculatorMemory {
     fun pow()
     fun join()
     fun sin()
+    fun switchRad()
+    fun switchDeg()
+    fun set(value: String)
+    fun const(value: String)
+    fun mod()
+    fun cos()
+    fun sqrt()
 
-    class Base : CalculatorMemory {
-        private var currentValue: CalculatorObject = OperandEmpty()
-        private var value: CalculatorObject = OperandEmpty()
-        private val operations: Stack<CalculatorObject> = Stack()
+    class Base(
+        private var currentValue: CalculatorObject = OperandEmpty(),
+        private val switcher: RadDegSwitcher = RadDegSwitcher.Base()
+    ) : CalculatorMemory {
 
         override fun append(value: String) {
-            if (currentValue is OperandEmpty) {
-                currentValue = OperandLong(value)
-                operations.add(currentValue)
+            currentValue = if (currentValue is OperandEmpty) {
+                OperandLong(value)
             } else {
-                currentValue = currentValue.append(value)
+                currentValue.append(value)
             }
         }
 
@@ -67,12 +78,44 @@ interface CalculatorMemory {
             currentValue = currentValue.append(OperatorPow())
         }
 
+        override fun sqrt() {
+            currentValue = currentValue.append(TrigonometricSqrt())
+        }
+
         override fun join() {
             currentValue = currentValue.append(OperatorJoin())
         }
 
         override fun sin() {
-            currentValue = currentValue.append(TrigonometricSin())
+            currentValue = currentValue.append(TrigonometricSin(switcher = switcher))
+        }
+
+        override fun cos() {
+            currentValue = currentValue.append(TrigonometricCos(switcher = switcher))
+        }
+
+        override fun switchRad() {
+            switcher.toRad()
+        }
+
+        override fun switchDeg() {
+            switcher.toDeg()
+        }
+
+        override fun mod() {
+            currentValue.lastOperand().mod()
+        }
+
+        override fun set(value: String) {
+            clear()
+            currentValue = currentValue.append(value)
+        }
+
+        override fun const(value: String) {
+            when (value) {
+                "π" -> currentValue = currentValue.append(ConstantPi())
+                "e" -> currentValue = currentValue.append(ConstantE())
+            }
         }
 
         /**
