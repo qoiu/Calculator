@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text"
+    style="@style/key"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/key_height"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/key_margin"
+    android:padding="@dimen/key_padding"
+    android:textSize="@dimen/key_text" />
